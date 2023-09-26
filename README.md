@@ -21,19 +21,6 @@ O arquivo está dentro da pasta "assets".
 
 ### Coisas para verificar 
 
-1. Falha nas goroutines 
-
-Ao rodar o projeto, está apresentando a seguinte falha:
-    ``` panic: runtime error: slice bounds out of range ```
-Mesmo aumentando a quantidade de goroutines não está funcionando, foi alterado para que faça a leitura, do arquivo em lotes porém sem sucesso. 
-
-Ao rodar o projeto, apresentou outra falha:
-    ``` panic: runtime error: slice bounds out of range [:20] with lenght 19 ```
-
-2. O que está ainda faltando 
-
-Ainda não foi feito a gravação dentro do banco de dados, verificar se com isso não poderia fazer a gravação de linha a linha dentro do banco de dados e depois verificar se a falha não é sanada. 
-
-3. Processamento das informações
-
-Pensar em outro tipo de leitura, as vezes exibir ou gravar em partes, faz a leitura de uma parte grava/exibe, depois vai para o próximo. 
+- Conexao com o banco de dados
+- Carregar variaveis de ambiente
+- Estruturacao do projeto
