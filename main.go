@@ -4,39 +4,69 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
-	"io"
-	"strings"
+	"os"
+	"strconv"
 )
 
 type Movie struct {
-	MovieID string
+	MovieID int
 	Title   string
 	Genres  string
 }
 
 func main() {
-	var csvFile = strings.NewReader(`"movieId","title","genres"`)
-
-	reader := csv.NewReader(bufio.NewReader(csvFile))
-	reader.Comma = ','
-
-	var filmes []Movie
-
-	for {
-		line, err := reader.Read()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			panic(err)
-		}
-
-		filmes = append(filmes, Movie{
-			MovieID: line[0],
-			Title:   line[1],
-			Genres:  line[2],
-		})
+	filePath := "assets/movie.csv"
+	movies, err := readMoviesFromFile(filePath)
+	if err != nil {
+		fmt.Println("Erro o ler o arquivo", err)
+		return
 	}
 
-	fmt.Println(filmes)
+	printMovies(movies)
+}
 
+func readMoviesFromFile(filePath string) ([]Movie, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	customReader := csv.NewReader(bufio.NewReader(file))
+	customReader.Comma = ','
+
+	_, err = customReader.Read() // Descarta o cabeçalho
+	if err != nil {
+		return nil, err
+	}
+
+	var movies []Movie
+	for {
+		record, err := customReader.Read()
+		if err != nil {
+			break
+		}
+
+		movieID := record[0]
+		title := record[1]
+		genres := record[2]
+
+		movieIDInt, _ := strconv.Atoi(movieID)
+
+		movie := Movie{
+			MovieID: movieIDInt,
+			Title:   title,
+			Genres:  genres,
+		}
+
+		movies = append(movies, movie)
+	}
+
+	return movies, nil
+}
+
+func printMovies(movies []Movie) {
+	for _, movie := range movies {
+		fmt.Printf("MovieID: %d, Title: %s, Genres: %s\n", movie.MovieID, movie.Title, movie.Genres)
+	}
 }
